@@ -30,7 +30,8 @@ console.log(`app running on port ${appconfig.port}`)
 server.on('listening', onListening)
 
 
-
+const socketLib = require("./libs/socketlib");
+const socketServer = socketLib.setserver(server);
 
 function onError(error) {
     if (error.syscall !== 'listen') {

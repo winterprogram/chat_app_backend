@@ -18,12 +18,23 @@ let setserver = (server) => {
                     console.log("logout user")
                 } else {
                     console.log("authtoken is verified")
-                    let currentuser = result.data;
+                    let currentuser = result.data.data[0]
+                    // console.log(result.data.data[0].userId)
                     socket.userId = currentuser.userId
-                    let fullName = `${currentuser.userDeatils.firstName} ${currentuser.userDeatils.lastName}`
+                    let fullName = `${currentuser.firstName} ${currentuser.lastName}`
                     socket.emit(currentuser.userId, "you are online")
+                    let userlist = { userId: currentuser.userId, fullName: currentuser.firstName }
+                    allOnlineuser.push(userlist)
                 }
             })
         })
+
+        socket.on('disconnect', () => {
+            console.log(`${socket.userId} is disconnected`)
+        })
     })
+}
+
+module.exports={
+    setserver:setserver
 }
