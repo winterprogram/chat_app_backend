@@ -11,9 +11,62 @@ const route_lodger = require('./middleware/route_lodger')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookie())
-
 app.use(middleware.initalerror)
 app.use(route_lodger.routelodger)
+var path = require("path");
+
+app.use(express.static(path.join(__dirname ,'client')))
+
+const http = require('http')
+// const appconfig = require('./../config/appconfig')
+
+const server = http.createServer(app);
+// console.log(appconfig)
+
+
+server.listen(appconfig.port)
+console.log(`app running on port ${appconfig.port}`)
+// server.on('error', onError)
+server.on('listening', onListening)
+
+
+
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        // logger.error(error.code + ' not equal listen', 'serverOnErrorHandler', 10)
+        throw error;
+    } switch (error.code) {
+        case 'EACCES':
+            // logger.error(error.code + ':elavated privileges required', 'serverOnErrorHandler', 10);
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            // logger.error(error.code + ':port is already in use.', 'serverOnErrorHandler', 10);
+            process.exit(1);
+            break;
+        default:
+            // logger.error(error.code + ':some unknown error occured', 'serverOnErrorHandler', 10);
+            throw error;
+    }
+}
+
+function onListening() {
+
+    // var addr = server.address();
+    // var bind = typeof addr === 'string'
+    //     ? 'pipe ' + addr
+    //     : 'port ' + addr.port;
+    // ('Listening on ' + bind);
+    // logger.info('server listening on port' + addr.port, 'serverOnListeningHandler', 10);
+    let db = mongoose.connect(appconfig.db.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+}
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+    // application specific logging, throwing an error, or other logic here
+});
+
+
 
 const fs = require('fs')
 let routePath = './routes'
@@ -32,11 +85,13 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 
 
 
-app.listen(appconfig.port, async () => {
-    console.log(`Example app listening on port 3000`);
-    let db = mongoose.connect(appconfig.db.uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-})
+
+// app.listen(appconfig, async () => {
+//     console.log(`Example app listening on port 3000`);
+//     let db = mongoose.connect(appconfig.db.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// })
 
 mongoose.connection.on('error', (err, req, res) => {
     console.log(err)

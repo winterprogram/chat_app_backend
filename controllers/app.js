@@ -203,20 +203,6 @@ let login = (req, res) => {
                     let a = api.apiresponse(false, 'user token stored successfully(1st login)', 200, data)
                     resolve(data)
 
-                    // result.save((err, oldtoken) => {
-                    //     if (err) {
-                    //         let a = api.apiresponse(true, 'token error', 500, err)
-                    //         reject(a)
-                    //     } else {
-                    //         let oldtoken = {
-                    //             authtoken: authdata.authtoken,
-                    //             userDetails: authdata.userId
-                    //         }
-                    //         let a = api.apiresponse(false, 'user token stored successfully(1st login)', 200, oldtoken)
-                    //         resolve(oldtoken)
-                    //     }
-                    // })
-
                 }
             })
         })
@@ -240,6 +226,10 @@ let login = (req, res) => {
 
 }
 
+let logout = (req, res) => {
+    auth.remove({ userId: req.user.userId })
+}
+
 let getallusers = (req, res) => {
     signupm.find().lean().exec((err, result) => {
         if (err) {
@@ -250,6 +240,8 @@ let getallusers = (req, res) => {
         }
     })
 }
+
+
 
 module.exports = {
     createuser: createuser,
