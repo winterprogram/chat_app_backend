@@ -11,9 +11,9 @@ let routes = (app) => {
     app.post('/signup', main.createuser)
     app.post('/login', main.login)
     app.get('/all', auth.authorized, main.getallusers)
-    app.get('/html', function (req, res) {
-        res.sendFile(__dirname + '/user1.html');
-    });
+    // app.get('/html', function (req, res) {
+    //     res.sendFile(__dirname + '/user1.html');
+    // });
 
 }
 
